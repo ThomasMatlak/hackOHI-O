@@ -27,7 +27,7 @@ if __name__ == '__main__':
 	testingImages = images[:len(images)/2]
 
 	classifier = svm.SVC(gamma=0.001)
-	classifier.fit(zip(*trainingImages)[0][0], zip(*trainingImages)[1])
+	classifier.fit(zip(*trainingImages)[0], zip(*trainingImages)[1])
 
 	expected = zip(*testingImages)[1]
 	predicted = classifier.predict(zip(*testingImages)[0])
