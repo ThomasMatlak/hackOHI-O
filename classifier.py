@@ -16,8 +16,22 @@ from random import shuffle
 if __name__ == '__main__':
 	#isn't python great? This is the same thing as the main method in java.
 	#start by getting the images
-	hingeDir = eg.fileopenbox(msg="Open labeled Hinge directory", title="Hinge dir")
-	nonhingeDir = eg.fileopenbox(msg="Open labeled Non-Hinge directory", title="Non-Hinge dir")
+
+	#Testing stuff
+	if (eg.ynbox('Testing?', 'test', ('Use actual data', 'Use MNIST Data'))):
+		hingeDir = eg.fileopenbox(msg="Open labeled Hinge directory", title="Hinge dir")
+		nonhingeDir = eg.fileopenbox(msg="Open labeled Non-Hinge directory", title="Non-Hinge dir")
+		images = getImages(hingeDir, nonhingeDir) #Getting training data
+	else:
+		images = getMNIST()
+	shuffle(images)
+	trainingImages = images[len(images)/2:] #Splits images into testing and training sets
+	testingImages = images[:len(images)/2]
+
+	classifier = svm.SVC(gamma=0.001)
+
+
+
 
 
 def getImages(hingeDirectory, nonHingeDirectory):
@@ -32,4 +46,10 @@ def getImages(hingeDirectory, nonHingeDirectory):
 		images[n] = [imread(file), 0]
 		n+=1
 	return images
+
+def getMNIST():
+	digits = datasets.load_digits()
+	images_and_labels = list(zip(digits.images, digits.target))
+	n_samples = len(digits.images)
+	data = digits.images.reshape((n_samples, -1))
 
