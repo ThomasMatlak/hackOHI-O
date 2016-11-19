@@ -15,8 +15,11 @@ This is a classifier for DNA Origami Hinges written in Python with Scikit-Learn.
 
 #Windows Dependencies Installation:
 -Use PIP to install the following .whl files (Note, I used the '-cp27-cp27m-win_amd64' versions)
+
 -http://www.lfd.uci.edu/~gohlke/pythonlibs/#numpy
+
 -http://www.lfd.uci.edu/~gohlke/pythonlibs/#scipy
+
 -http://www.lfd.uci.edu/~gohlke/pythonlibs/#scikit-learn
 
 #"Design Doc": 
