@@ -56,8 +56,14 @@ if __name__ == '__main__':
 	trainingImages = images[len(images)//2:] #Splits images into testing and training sets
 	testingImages = images[:len(images)//2]
 
-	classifier = svm.SVC(gamma=0.001)
-	print zip(*trainingImages)[1]
+	userGamma, tolerence = eg.multenterbox("Enter custom values", "Customize SVC", ["Gamma", "Tolerence"])
+	if userGamma is None:
+		userGamma = "auto"
+	if tolerence is None:
+		tolerence = 0.001
+
+	classifier = svm.SVC(gamma=userGamma, tol=tolerence)
+	# print zip(*trainingImages)[1]
 	classifier.fit(zip(*trainingImages)[0], zip(*trainingImages)[1])
 
 	expected = zip(*testingImages)[1]
