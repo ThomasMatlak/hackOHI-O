@@ -9,6 +9,8 @@
 * Lemon Qi
 
 This is a classifier for DNA Origami Hinges written in Python with Scikit-Learn.
+Note, this is currently Python 2.x ONLY
+However, it shouldn't be terribly difficult to port
 
 #Dependencies: 
 * Scikit-learn
