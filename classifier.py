@@ -11,22 +11,53 @@ import numpy as np
 from imageio import imread
 from random import shuffle
 
+
+
+def getImages(hingeDirectory, nonHingeDirectory):
+	#Open the directory, pulls each image and returns an array with an np array as the 1st element and either a 1 or 0 as the 2nd
+	#1 = Hinge, 0 = Non-Hinge
+	n=0
+	FImages = np.zeros((len(os.listdir(hingeDirectory))+len(os.listdir(nonHingeDirectory))), dtype=np.int).tolist()
+	for file in os.listdir(hingeDirectory):
+		rawNPArray = imread(hingeDirectory + '\\' + file) 
+		FImages[n] = [flatten(rawNPArray), 1]
+		n+=1
+	for file in os.listdir(nonHingeDirectory):
+		rawNPArray = imread(nonHingeDirectory + '\\' + file) 
+		FImages[n] = [flatten(rawNPArray), 0]
+		n+=1
+	return FImages
+
+def flatten(image):
+	# rowLen = len(image[0])
+	index = 0
+	image = zip(*image[0]) #This strips the superflous rgb values
+	flatImage = np.zeros(len(image) * len(image[0]), dtype=np.int)
+	for row in range(0, len(image)):
+		for pixel in range(0, row):
+			flatImage[index] = image[row][pixel]
+			index += 1
+		# print flatImage
+	return flatImage 
+
+
+
 if __name__ == '__main__':
 	#isn't python great? This is the same thing as the main method in java.
 	#start by getting the images
 
 	#Testing stuff
-	if (eg.ynbox('Testing?', 'test', ('Use actual data', 'Use MNIST Data'))):
-		hingeDir = eg.fileopenbox(msg="Open labeled Hinge directory", title="Hinge dir")
-		nonhingeDir = eg.fileopenbox(msg="Open labeled Non-Hinge directory", title="Non-Hinge dir")
-		images = getImages(hingeDir, nonhingeDir) #Getting training data
-	else:
-		images = getMNIST()
+	hingeDir = eg.diropenbox(msg="Open labeled Hinge directory", title="Hinge dir")
+	# print os.listdir(hingeDir)
+	nonhingeDir = eg.diropenbox(msg="Open labeled Non-Hinge directory", title="Non-Hinge dir")
+	images = getImages(hingeDir, nonhingeDir) #Getting training data
+
 	shuffle(images)
-	trainingImages = images[len(images)/2:] #Splits images into testing and training sets
-	testingImages = images[:len(images)/2]
+	trainingImages = images[len(images)//2:] #Splits images into testing and training sets
+	testingImages = images[:len(images)//2]
 
 	classifier = svm.SVC(gamma=0.001)
+	print zip(*trainingImages)[1]
 	classifier.fit(zip(*trainingImages)[0], zip(*trainingImages)[1])
 
 	expected = zip(*testingImages)[1]
@@ -35,25 +66,3 @@ if __name__ == '__main__':
 	print("Classification report for classifier %s:\n%s\n"
       % (classifier, metrics.classification_report(expected, predicted)))
 	print("Confusion matrix:\n%s" % metrics.confusion_matrix(expected, predicted))
-
-
-
-
-def getImages(hingeDirectory, nonHingeDirectory):
-	#Open the directory, pulls each image and returns an array with an np array as the 1st element and either a 1 or 0 as the 2nd
-	#1 = Hinge, 0 = Non-Hinge
-	n=0
-	for file in os.listdir(hingeDirectory):
-		images[n], _ = [imread(file), 1] #imread returns an np array AND metadata
-		n+=1
-	for file in os.listdir(nonHingeDirectory):
-		images[n], _ = [imread(file), 0] #the _ is being assigned the metadata
-		n+=1
-	return images
-
-def getMNIST():
-	digits = datasets.load_digits()
-	images_and_labels = list(zip(digits.images, digits.target))
-	n_samples = len(digits.images)
-	data = digits.images.reshape((n_samples, -1))
-
