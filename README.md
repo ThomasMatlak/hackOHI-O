@@ -4,8 +4,20 @@
 
 ### Team Members (in no particular order):
 * Thomas Matlak
-*
+* Edwin Shuttleworth
 *
 *
 
 This is a classifier for DNA Origami Hinges written in Python with Scikit-Learn.
+
+#Dependencies: 
+-Scikit-learn
+
+#Windows Dependencies Installation:
+-Use PIP to install the following .whl files (Note, I used the '-cp27-cp27m-win_amd64' versions)
+-http://www.lfd.uci.edu/~gohlke/pythonlibs/#numpy
+-http://www.lfd.uci.edu/~gohlke/pythonlibs/#scipy
+-http://www.lfd.uci.edu/~gohlke/pythonlibs/#scikit-learn
+
+#"Design Doc": 
+https://docs.google.com/document/d/14cWWIIg7niLmwgw8lxkFlN02rUiKfyt_ms9ZCXtCtzg/edit
