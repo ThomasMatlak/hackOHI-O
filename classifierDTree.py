@@ -10,6 +10,7 @@ import easygui as eg
 import numpy as np
 from imageio import imread, imwrite
 from random import shuffle
+from sklearn.externals import joblib	
 
 
 
@@ -26,14 +27,16 @@ def getImages(hingeDirectory, nonHingeDirectory):
 		rawNPArray = imread(nonHingeDirectory + '\\' + file) 
 		FImages[n] = [flatten(rawNPArray), 0]
 		n+=1
+	print len(FImages[0][0])
 	return FImages
 
 def flatten(image):
 	# rowLen = len(image[0])
 	# print image
-	index = 0
-	image = zip(*image[0]) #This strips the superflous rgb values
-	# print image
+	try:
+		image = zip(*image[0]) #This strips the superflous rgb values
+	except TypeError:
+		print 'huh'
 	flatImage = np.hstack(image)
 	# print flatImage
 	return flatImage 
@@ -45,34 +48,28 @@ if __name__ == '__main__':
 	#start by getting the images
 
 	#Testing stuff
+	print "Started"
 	hingeDir = eg.diropenbox(msg="Open labeled Hinge directory", title="Hinge dir")
 	# print os.listdir(hingeDir)
 	nonhingeDir = eg.diropenbox(msg="Open labeled Non-Hinge directory", title="Non-Hinge dir")
 	images = getImages(hingeDir, nonhingeDir) #Getting training data
+	print "Got the images!"
 
 	# print zip(*images[1])
 	shuffle(images)
 	# print zip(*images[1])
 	trainingImages = images[len(images)//2:] #Splits images into testing and training sets
 	testingImages = images[:len(images)//2]
-	# print zip(*trainingImages[1])
-	# shuffle(trainingImages)
-	# print zip(*trainingImages[1])
-	# trainingImages = images
-	# shuffle(images)
-	# testingImages = images
-	# if userGamma is None:
-	# 	userGamma = "auto"
-	# if tolerence is None:
-	# 	tolerence = 0.001
-
 	# classifier = svm.SVC(gamma=userGamma, tol=tolerence)
-	classifier = neural_network.MLPClassifier(hidden_layer_sizes=(300,), solver="lbfgs", max_iter=2000)
-	# classifier = tree.DecisionTreeClassifier(criterion="gini", splitter="best", max_features="auto")
+	print "Initializing NN!"
+	classifier = svm.SVC(cache_size=500)
 
+	# classifier = neural_network.MLPClassifier(hidden_layer_sizes=(400, 300, 200, 100), solver="lbfgs", max_iter=500, alpha=.0001, activation="tanh", verbose=False)
+	# classifier = tree.DecisionTreeClassifier(criterion="gini", splitter="best", max_features="auto")
+	print("Starting to fit, hold on tight!")
 	# print zip(*trainingImages)[1]	
 	classifier.fit(zip(*trainingImages)[0], zip(*trainingImages)[1])
-
+	print("Fitted!")
 
 	expected = zip(*testingImages)[1]
 	predicted = classifier.predict(zip(*testingImages)[0])
@@ -81,3 +78,4 @@ if __name__ == '__main__':
       % (classifier, metrics.classification_report(expected, predicted)))
 	print("Confusion matrix:\n%s" % metrics.confusion_matrix(expected, predicted))
 
+	joblib.dump(classifier, 'MLPClassifier.pkl')

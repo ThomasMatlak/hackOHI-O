@@ -17,10 +17,17 @@ def getImages(hingeDirectory, nonHingeDirectory):
 	#Open the directory, pulls each image and returns an array with an np array as the 1st element and either a 1 or 0 as the 2nd
 	#1 = Hinge, 0 = Non-Hinge
 	n=0
+	# FImages = np.array()
 	FImages = np.zeros((len(os.listdir(hingeDirectory))+len(os.listdir(nonHingeDirectory))), dtype=np.int).tolist()
+	# print FImages
 	for file in os.listdir(hingeDirectory):
-		rawNPArray = imread(hingeDirectory + '\\' + file) 
+		rawNPArray = imread(hingeDirectory + '\\' + file)
+		# print dim(rawNPArray)
+		# print len(rawNPArray[0])
+		# print len(rawNPArray[3][0])
+
 		FImages[n] = [flatten(rawNPArray), 1]
+		# print FImages[n]
 		print ("Image " + str(n) + " built")
 		n+=1
 	for file in os.listdir(nonHingeDirectory):
@@ -33,14 +40,24 @@ def getImages(hingeDirectory, nonHingeDirectory):
 def flatten(image):
 	# rowLen = len(image[0])
 	# print image
-	flatImage = np.zeros((len(image)**2))
-	index = 0
-	# print image[0]
-	for num in range(0, len(image)):
-		np.append(flatImage, np.hstack(image[num]))
-	# image = zip(*image[0]) #This strips the superflous rgb values
-	# print image
-	# flatImage = np.hstack(image)
+	# flatImage = np.zeros((len(image)**2))	
+	# print 'thisone'
+	# return image[0]
+	try:
+		image = zip(*image[0]) #This strips the superflous rgb values
+		flatImage = image[0][0]
+		for num in range(1, len(image[0])):
+			np.append(flatImage, np.hstack(image[0][num]))
+	except TypeError:
+		print 'huh'
+		flatImage = image[0]
+		# print image[0]
+		for num in range(1, len(image)):
+			np.append(flatImage, np.hstack(image[num]))
+		# print flatImage
+	# # image = zip(*image[0]) #This strips the superflous rgb values
+	# # print image
+	# # flatImage = np.hstack(image)
 	# print flatImage
 	return flatImage 
 
