@@ -21,20 +21,26 @@ def getImages(hingeDirectory, nonHingeDirectory):
 	for file in os.listdir(hingeDirectory):
 		rawNPArray = imread(hingeDirectory + '\\' + file) 
 		FImages[n] = [flatten(rawNPArray), 1]
+		print ("Image " + str(n) + " built")
 		n+=1
 	for file in os.listdir(nonHingeDirectory):
 		rawNPArray = imread(nonHingeDirectory + '\\' + file) 
 		FImages[n] = [flatten(rawNPArray), 0]
+		print ("Image " + str(n) + " built")
 		n+=1
 	return FImages
 
 def flatten(image):
 	# rowLen = len(image[0])
 	# print image
+	flatImage = np.zeros((len(image)**2))
 	index = 0
-	image = zip(*image[0]) #This strips the superflous rgb values
+	# print image[0]
+	for num in range(0, len(image)):
+		np.append(flatImage, np.hstack(image[num]))
+	# image = zip(*image[0]) #This strips the superflous rgb values
 	# print image
-	flatImage = np.hstack(image)
+	# flatImage = np.hstack(image)
 	# print flatImage
 	return flatImage 
 
@@ -50,9 +56,12 @@ if __name__ == '__main__':
 	nonhingeDir = eg.diropenbox(msg="Open labeled Non-Hinge directory", title="Non-Hinge dir")
 	images = getImages(hingeDir, nonhingeDir) #Getting training data
 
-	shuffle(images)
+	# print images
+	# shuffle(images)
+	# print images
 	trainingImages = images[len(images)//2:] #Splits images into testing and training sets
 	testingImages = images[:len(images)//2]
+	
 	# trainingImages = images
 	# shuffle(images)
 	# testingImages = images
@@ -75,3 +84,5 @@ if __name__ == '__main__':
 	print("Classification report for classifier %s:\n%s\n"
       % (classifier, metrics.classification_report(expected, predicted)))
 	print("Confusion matrix:\n%s" % metrics.confusion_matrix(expected, predicted))
+
+	joblib.dump(classifier, 'SVMClassifier.pkl')
