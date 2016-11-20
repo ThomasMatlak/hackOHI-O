@@ -46,6 +46,16 @@ if len(args) > 1:
 			ml_model = int(args[i + 1])
 			i += 1
 			continue
+		elif args[i] == "--help" or args[i] == "-h" or args[i] == "-?":
+			print "Usage:"
+			print "  python callAwsModels.py [options]"
+			print "  One of the following options must be used:"
+			print "    -r, --realtime <path/to/image>       Choose the image to use to generate a single prediction."
+			print "    -b --batch <path/to/dir|path/to/csv> Choose the path to a directory of images to create a batch request."
+			print "  The following options are optional:"
+			print "    -m, --model <2/3>                    Choose the ML model to use."
+			print "    -h, -?, --help                       Show this screen."
+			exit()
 		else:
 			continue
 			print args[i] + " is an invalid option."
