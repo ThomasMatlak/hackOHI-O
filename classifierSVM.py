@@ -3,7 +3,7 @@ This is an image classifier for DNA Origami Hinges
 """
 from __future__ import division
 import matplotlib.pyplot as plt
-from sklearn import svm, datasets, metrics
+from sklearn import svm, datasets, metrics, neural_network
 import os
 import pickle
 import easygui as eg
@@ -53,18 +53,23 @@ if __name__ == '__main__':
 	images = getImages(hingeDir, nonhingeDir) #Getting training data
 
 	shuffle(images)
-	trainingImages = images[len(images)//2:] #Splits images into testing and training sets
-	testingImages = images[:len(images)//2]
+	# trainingImages = images[len(images)//2:] #Splits images into testing and training sets
+	# testingImages = images[:len(images)//2]
+	trainingImages = images
+	shuffle(images)
+	testingImages = images
+	# userGamma, tolerence = eg.multenterbox("Enter custom values", "Customize SVC", ["Gamma", "Tolerence"])
+	# if userGamma is None:
+	# 	userGamma = "auto"
+	# if tolerence is None:
+	# 	tolerence = 0.001
 
-	userGamma, tolerence = eg.multenterbox("Enter custom values", "Customize SVC", ["Gamma", "Tolerence"])
-	if userGamma is None:
-		userGamma = "auto"
-	if tolerence is None:
-		tolerence = 0.001
+	# classifier = svm.SVC(gamma=userGamma, tol=tolerence)
+	classifier = svm.SVC()
 
-	classifier = svm.SVC(gamma=userGamma, tol=tolerence)
 	# print zip(*trainingImages)[1]
 	classifier.fit(zip(*trainingImages)[0], zip(*trainingImages)[1])
+
 
 	expected = zip(*testingImages)[1]
 	predicted = classifier.predict(zip(*testingImages)[0])
