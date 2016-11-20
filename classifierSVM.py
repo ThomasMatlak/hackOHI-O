@@ -3,12 +3,12 @@ This is an image classifier for DNA Origami Hinges
 """
 from __future__ import division
 import matplotlib.pyplot as plt
-from sklearn import svm, datasets, metrics, neural_network
+from sklearn import svm, datasets, metrics
 import os
 import pickle
 import easygui as eg
 import numpy as np
-from imageio import imread
+from imageio import imread, imwrite
 from random import shuffle
 
 
@@ -30,14 +30,12 @@ def getImages(hingeDirectory, nonHingeDirectory):
 
 def flatten(image):
 	# rowLen = len(image[0])
+	# print image
 	index = 0
 	image = zip(*image[0]) #This strips the superflous rgb values
-	flatImage = np.zeros(len(image) * len(image[0]), dtype=np.int)
-	for row in range(0, len(image)):
-		for pixel in range(0, row):
-			flatImage[index] = image[row][pixel]
-			index += 1
-		# print flatImage
+	# print image
+	flatImage = np.hstack(image)
+	# print flatImage
 	return flatImage 
 
 
@@ -53,11 +51,11 @@ if __name__ == '__main__':
 	images = getImages(hingeDir, nonhingeDir) #Getting training data
 
 	shuffle(images)
-	# trainingImages = images[len(images)//2:] #Splits images into testing and training sets
-	# testingImages = images[:len(images)//2]
-	trainingImages = images
-	shuffle(images)
-	testingImages = images
+	trainingImages = images[len(images)//2:] #Splits images into testing and training sets
+	testingImages = images[:len(images)//2]
+	# trainingImages = images
+	# shuffle(images)
+	# testingImages = images
 	# userGamma, tolerence = eg.multenterbox("Enter custom values", "Customize SVC", ["Gamma", "Tolerence"])
 	# if userGamma is None:
 	# 	userGamma = "auto"
