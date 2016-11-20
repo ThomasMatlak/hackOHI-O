@@ -61,16 +61,16 @@ if __name__ == '__main__':
 	# trainingImages = images
 	# shuffle(images)
 	# testingImages = images
-	# userGamma, tolerence = eg.multenterbox("Enter custom values", "Customize SVC", ["Gamma", "Tolerence"])
 	# if userGamma is None:
 	# 	userGamma = "auto"
 	# if tolerence is None:
 	# 	tolerence = 0.001
 
 	# classifier = svm.SVC(gamma=userGamma, tol=tolerence)
-	classifier = tree.DecisionTreeClassifier(criterion="entropy")
+	classifier = neural_network.MLPClassifier(hidden_layer_sizes=(300,), solver="lbfgs", max_iter=2000)
+	# classifier = tree.DecisionTreeClassifier(criterion="gini", splitter="best", max_features="auto")
 
-	# print zip(*trainingImages)[1]
+	# print zip(*trainingImages)[1]	
 	classifier.fit(zip(*trainingImages)[0], zip(*trainingImages)[1])
 
 
@@ -80,3 +80,4 @@ if __name__ == '__main__':
 	print("Classification report for classifier %s:\n%s\n"
       % (classifier, metrics.classification_report(expected, predicted)))
 	print("Confusion matrix:\n%s" % metrics.confusion_matrix(expected, predicted))
+
