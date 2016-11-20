@@ -13,11 +13,8 @@ Accept the following arguments:
 """
 
 import sys
-import json
-import requests
 import Image
 import boto3
-import StringIO
 
 # Options
 ml_model = 3
@@ -92,8 +89,8 @@ if not batch:
 	prediction = response['Prediction']['predictedLabel']
 
 	if prediction == "1":
-		print "With " + str(response['Prediction']['predictedScores']['1']) + "% certainty, " + realtime_source_image + " is a match."
+		print "With " + str(response['Prediction']['predictedScores']['1']) + " % certainty, \"" + realtime_source_image + "\" is a match."
 	elif prediction == "0":
-		print "With " + str(response['Prediction']['predictedScores']['1']) + "% certainty, " + realtime_source_image + " is not a match."
+		print "With " + str(response['Prediction']['predictedScores']['1']) + " % certainty, \"" + realtime_source_image + "\" is not a match."
 else:
 	print "WIP"
